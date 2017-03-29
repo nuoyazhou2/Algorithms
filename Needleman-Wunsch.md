@@ -13,14 +13,14 @@ Figure 3-1. Example of an alignment matrix
 
 In reality, you don't store letters in the matrix as shown in Figure 3-1. Each cell of the matrix actually contains two values: a score and a pointer. The score is derived from the scoring scheme. Here, this means +1 or -1, but when aligning biological sequences, the values come from a scoring matrix (a topic of the next chapter). The pointer is a directional indicator (an arrow) that points up, left, or diagonally up and left. The pointer navigates the matrix, and its use will become clearer later in the chapter. Now, let's look at the algorithm in detail. There are three major phases: initialization, fill, and trace-back.
 
-3.1.1 Initialization
+## 3.1.1 Initialization
 
 In the initialization phase, you assign values for the first row and column (Figure 3-2). The next stage of the algorithm depends on this. The score of each cell is set to the gap score multiplied by the distance from the origin. Gaps may be present at the beginning of either sequence, and their cost is the same as anywhere else. The arrows all point back to the origin, which ensures that alignments go all the way back to the origin (a requirement for global alignment).
 
 Figure 3-2. Initialization of the alignment matrix
 
 
-3.1.2 Fill
+## 3.1.2 Fill
 
 In the fill phase (also called induction), the entire matrix is filled with scores and pointers using a simple operation that requires the scores from the diagonal, vertical, and horizontal neighboring cells. You will compute three scores: a match score, a vertical gap score, and a horizontal gap score. The match score is the sum of the diagonal cell score and the score for a match (+1 or -1). The horizontal gap score is the sum of the cell to the left and the gap score (-1), and the vertical gap score is computed analogously. Once you've computed these scores, assign the maximum value to the cell and point the arrow in the direction of the maximum score. Continue this operation until the entire matrix is filled, and each cell contains the score and pointer to the best possible alignment at that point.
 
@@ -45,7 +45,7 @@ Using the same maximizing procedure for each cell, you can fill the entire matri
 Figure 3-5. Filled alignment matrix
 
 
-3.1.3 Trace-Back
+## 3.1.3 Trace-Back
 
 The trace-back lets you recover the alignment from the matrix. Like the other parts of this algorithm, it's pretty simple. Start at the bottom-right corner and follow the arrows until you get to the beginning. To produce the alignment, at each cell, write out the corresponding letters or a hyphen for the gap symbol. Since you're following it from the end to the start, the alignment will be backward, and you just reverse it. The final alignment looks like this:
 
@@ -54,7 +54,7 @@ COELACANTH
 Example 3-1 shows a Perl script.
 
 Example 3-1. Trace-back with Needleman-Wunsch algorithm
-
+```
 # Needleman-Wunsch  Algorithm 
 
 # usage statement
@@ -158,3 +158,4 @@ $align1 = reverse $align1;
 $align2 = reverse $align2;
 print "$align1\n";
 print "$align2\n";
+```
